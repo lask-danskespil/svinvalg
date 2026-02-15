@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const historier = (await getCollection("historier"))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const label = (p: string) =>
+  p === "faktuel" ? "Faktuel" : p === "tilhænger" ? "Tilhænger" : "Modstander";
+---
+<BaseLayout title="Kilder – Svinevalg">
+  <h1>Kilder</h1>
+  <p class="muted">
+    Samlet oversigt over alle kilder, der er linket fra historierne.
+  </p>
+
+  <div class="grid">
+    {historier.map((h) => (
+      <article class="card">
+        <div class="card-top">
+          <span class={`badge pos-${h.data.position}`}>{label(h.data.position)}</span>
+          <time class="muted" datetime={h.data.date.toISOString()}>
+            {h.data.date.toLocaleDateString("da-DK")}
+          </time>
+        </div>
+
+        <h2 class="card-title">
+          <a href={`/historier/${h.slug}/`}>{h.data.title}</a>
+        </h2>
+
+        <div class="muted" style="margin-bottom:8px">{h.data.sourceTitle}</div>
+
+        <div class="source">
+          <a href={h.data.sourceUrl} target="_blank" rel="noreferrer">Åbn kilde</a>
+        </div>
+
+        <div class="tagrow" style="margin-top:10px">
+          {h.data.tags.map((t) => <span class="tag">{t}</span>)}
+        </div>
+      </article>
+    ))}
+  </div>
+</BaseLayout>

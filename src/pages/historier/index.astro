@@ -1,0 +1,78 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const historier = (await getCollection("historier"))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const positions = ["faktuel", "tilhænger", "modstander"] as const;
+
+const url = new URL(Astro.request.url);
+const pos = url.searchParams.get("pos");
+const tag = url.searchParams.get("tag");
+
+const filtered = historier.filter((h) => {
+  if (pos && h.data.position !== pos) return false;
+  if (tag && !h.data.tags.includes(tag)) return false;
+  return true;
+});
+
+const allTags = Array.from(new Set(historier.flatMap((h) => h.data.tags)))
+  .sort((a, b) => a.localeCompare(b, "da"));
+
+const label = (p: string) =>
+  p === "faktuel" ? "Faktuel" : p === "tilhænger" ? "Tilhænger" : "Modstander";
+---
+<BaseLayout title="Historier – Svinevalg">
+  <h1>Historier</h1>
+
+  <div class="filters">
+    <div class="filter">
+      <span class="muted">Position:</span>
+      <a class={pos ? "chip" : "chip active"} href="/historier">Alle</a>
+      {positions.map((p) => (
+        <a class={pos === p ? "chip active" : "chip"} href={`/historier?pos=${p}`}>
+          {label(p)}
+        </a>
+      ))}
+    </div>
+
+    <div class="filter">
+      <span class="muted">Tema:</span>
+      <a class={tag ? "chip" : "chip active"} href={pos ? `/historier?pos=${pos}` : "/historier"}>Alle</a>
+      {allTags.map((t) => (
+        <a
+          class={tag === t ? "chip active" : "chip"}
+          href={`/historier?${pos ? `pos=${pos}&` : ""}tag=${encodeURIComponent(t)}`}
+        >
+          {t}
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <div class="grid">
+    {filtered.map((h) => (
+      <article class="card">
+        <div class="card-top">
+          <span class={`badge pos-${h.data.position}`}>{label(h.data.position)}</span>
+          <time class="muted" datetime={h.data.date.toISOString()}>
+            {h.data.date.toLocaleDateString("da-DK")}
+          </time>
+        </div>
+
+        <h2 class="card-title">
+          <a href={`/historier/${h.slug}/`}>{h.data.title}</a>
+        </h2>
+
+        <div class="tagrow">
+          {h.data.tags.slice(0, 4).map((t) => <span class="tag">{t}</span>)}
+        </div>
+
+        <div class="source">
+          <a href={h.data.sourceUrl} target="_blank" rel="noreferrer">Kilde</a>
+        </div>
+      </article>
+    ))}
+  </div>
+</BaseLayout>

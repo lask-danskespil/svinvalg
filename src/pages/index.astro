@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const historier = (await getCollection("historier"))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 8);
+
+const label = (p: string) =>
+  p === "faktuel" ? "Faktuel" : p === "tilhænger" ? "Tilhænger" : "Modstander";
+---
+<BaseLayout>
+  <section class="hero">
+    <h1>Svinevalg</h1>
+    <p>
+      Et kildebaseret overblik over konsekvenser ved stor svineproduktion i Danmark —
+      og argumenter fra både tilhængere og modstandere. Hver historie har direkte link til original kilde.
+    </p>
+    <div class="hero-cta">
+      <a class="btn" href="/historier">Se alle historier</a>
+      <a class="btn ghost" href="/om">Metode & principper</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Seneste historier</h2>
+    <div class="grid">
+      {historier.map((h) => (
+        <article class="card">
+          <div class="card-top">
+            <span class={`badge pos-${h.data.position}`}>{label(h.data.position)}</span>
+            <time class="muted" datetime={h.data.date.toISOString()}>
+              {h.data.date.toLocaleDateString("da-DK")}
+            </time>
+          </div>
+
+          <h3 class="card-title">
+            <a href={`/historier/${h.slug}/`}>{h.data.title}</a>
+          </h3>
+
+          <div class="tagrow">
+            {h.data.tags.slice(0, 3).map((t) => <span class="tag">{t}</span>)}
+          </div>
+
+          <div class="source">
+            <a href={h.data.sourceUrl} target="_blank" rel="noreferrer">Kilde</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

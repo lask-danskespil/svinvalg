@@ -1,0 +1,44 @@
+---
+const {
+  title = "Svinevalg",
+  description = "Fakta og kilder om svineproduktion i Danmark"
+} = Astro.props;
+---
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-text">
+            <strong>Svinevalg</strong>
+            <span class="brand-sub">Fakta og kilder om svineproduktion i Danmark</span>
+          </span>
+        </a>
+        <nav class="nav">
+          <a href="/historier">Historier</a>
+          <a href="/kilder">Kilder</a>
+          <a href="/om">Om</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap content">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <span>© {new Date().getFullYear()} Svinevalg</span>
+      </div>
+    </footer>
+  </body>
+</html>

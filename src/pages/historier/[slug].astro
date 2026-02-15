@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const historier = await getCollection("historier");
+  return historier.map((h) => ({ params: { slug: h.slug }, props: { h } }));
+}
+
+const { h } = Astro.props;
+const { Content } = await h.render();
+
+const label = (p: string) =>
+  p === "faktuel" ? "Faktuel" : p === "tilhænger" ? "Tilhænger" : "Modstander";
+---
+<BaseLayout title={`${h.data.title} – Svinevalg`}>
+  <article class="article">
+    <div class="article-meta">
+      <span class={`badge pos-${h.data.position}`}>{label(h.data.position)}</span>
+      <time class="muted" datetime={h.data.date.toISOString()}>
+        {h.data.date.toLocaleDateString("da-DK")}
+      </time>
+      <div class="tagrow">
+        {h.data.tags.map((t) => <span class="tag">{t}</span>)}
+      </div>
+    </div>
+
+    <h1>{h.data.title}</h1>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <aside class="sourcebox">
+      <strong>Kilde</strong>
+      <div class="muted">{h.data.sourceTitle}</div>
+      <a href={h.data.sourceUrl} target="_blank" rel="noreferrer">Åbn original kilde</a>
+    </aside>
+  </article>
+</BaseLayout>
