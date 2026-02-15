@@ -1,14 +1,16 @@
 :root{
-  --bg:#fbfbfc;
-  --ink:#14161a;
-  --muted:#5b6572;
-  --line:#e6e8ec;
-  --card:#ffffff;
+  --bg:#FBFBFC;
+  --ink:#14161A;
+  --muted:#5B6572;
+  --line:#E6E8EC;
+  --card:#FFFFFF;
 
-  --pig:#d9586e;      /* svin-accent */
-  --fact:#2f6f9f;     /* faglig blå */
-  --pro:#2f8a63;      /* tilhænger */
-  --con:#a34a2a;      /* modstander */
+  --pig:#D9586E;      /* svin-accent */
+  --pig-weak:#F0A3AF;
+
+  --fact:#2F6F9F;     /* faglig blå */
+  --pro:#2F8A63;      /* tilhænger */
+  --con:#A34A2A;      /* modstander */
 }
 
 *{ box-sizing:border-box; }
@@ -29,17 +31,8 @@ body{
 .header-inner{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; gap:16px; }
 
 .brand{ display:flex; gap:12px; text-decoration:none; color:inherit; align-items:center; }
-.brand-mark{
-  width:34px; height:34px; border-radius:10px;
-  background: linear-gradient(135deg, var(--pig), #f0a3af);
-  position:relative;
-}
-.brand-mark:before{
-  content:"";
-  position:absolute; inset:10px 8px;
-  border:2px solid rgba(255,255,255,.85);
-  border-radius:999px;
-}
+.brand-logo{ display:block; border-radius:10px; }
+
 .brand-sub{ display:block; font-size:12px; color:var(--muted); margin-top:2px; }
 
 .nav a{ color:var(--muted); text-decoration:none; margin-left:14px; }
@@ -92,7 +85,7 @@ body{
 .tagrow{ display:flex; flex-wrap:wrap; gap:6px; }
 .tag{
   font-size:12px; padding:3px 8px;
-  border-radius:999px; background:#f4f6f9; color:var(--muted);
+  border-radius:999px; background:#F4F6F9; color:var(--muted);
   border:1px solid var(--line);
 }
 
@@ -120,7 +113,7 @@ body{
   padding: 14px;
   border-radius: 16px;
   border: 1px solid var(--line);
-  background: #ffffff;
+  background: #FFFFFF;
 }
 .sourcebox a{ color:var(--fact); text-decoration:none; }
 .sourcebox a:hover{ text-decoration:underline; }
